@@ -1,0 +1,32 @@
+{
+  "name": "commons-utils",
+  "version": "1.0.0",
+  "description": "Common Utilities",
+  "main": "dist/${projectName}.js",
+  "scripts": {
+    "prepublish": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pujansrt/commons-utils"
+  },
+  "keywords": [
+    "typescript",
+    "javascript",
+    "node",
+    "common",
+    "utilities",
+    "array",
+    "es6"
+  ],
+  "author": "Pujan Srivastava <pujansrt@gmail.com> (http://pujansrt.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pujansrt/commons-utils/issues"
+  },
+  "homepage": "https://github.com/pujansrt/commons-utils",
+  "devDependencies": {
+    "typescript": "2.1.4"
+  }
+}
