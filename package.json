@@ -1,8 +1,8 @@
 {
   "name": "commons-utils",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "Common Utilities",
-  "main": "dist/${projectName}.js",
+  "main": "dist/commons-utils.js",
   "scripts": {
     "prepublish": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
