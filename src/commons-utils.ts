@@ -1,4 +1,4 @@
-const easifyarray = (arr:any) => {
+const easifyArray = (arr:any) => {
 	const proxy = new Proxy(arr, {  
   		get(target, name) {
     		if(name in target) return Reflect.get(target,name);
@@ -9,7 +9,7 @@ const easifyarray = (arr:any) => {
 	return proxy;
 }
 
-const shuffle = (arr:any) => {
+const shuffleArray = (arr:any) => {
     for (let i = arr.length; i; i--) {
         let j = Math.floor(Math.random() * i);
         [arr[i - 1], arr[j]] = [arr[j], arr[i - 1]];
