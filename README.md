@@ -17,6 +17,7 @@ var Commons = require('../dist/commons-utils.js');
 
 var arr = [1,2,3,4,5];
 
+console.log(Commons.Utils.easifyArray(arr)[-1]);
 console.log(Commons.Utils.shuffleArray(arr));
 console.log(Commons.Utils.randomArray(4,15));
 console.log(Commons.Utils.removeItemInArray(arr,3));
@@ -42,6 +43,8 @@ console.log(Commons.Utils.removeItemInArray(arr,3));
 ## Available Methods for Arrays
 
 ```
+easifyArray(arr)[-1]; // 5
+
 shuffleArray([1,2,3,4,5]);	//[3,2,4,1,5]
 
 randomArray(6, 10);		//[2, 8, 4, 2, 7, 8]

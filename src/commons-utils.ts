@@ -1,17 +1,17 @@
 export class Commons {
-// easifyArray = (arr:any) => {
-//   const proxy = new Proxy(arr, {
-//  		get(target, name) {
-//    		if(name in target) return Reflect.get(target,name);
-//    		const index = Number(name);
-//    		return Reflect.get(target, target.length + index);
-//  		}
-//   });
-//   return proxy;
-//    }
+    easifyArray = (arr: any) => {
+        const proxy = new Proxy(arr, {
+            get(target, name) {
+                if (name in target) return Reflect.get(target, name);
+                const index = Number(name);
+                return Reflect.get(target, target.length + index);
+            }
+        });
+        return proxy;
+    }
 
     shuffleArray = (arr: any) => {
-        for (let i = arr.length; i > 0 ; i--) {
+        for (let i = arr.length; i > 0; i--) {
             let j = Math.floor(Math.random() * i);
             [arr[i - 1], arr[j]] = [arr[j], arr[i - 1]];
         }
