@@ -32,6 +32,39 @@ export class Commons {
         return arr;
     };
 
+    diffArrays = (arr1:Array<any>, arr2:Array<any>) => {
+        var aList = arr1.filter( item => arr2.indexOf(item) < 0);
+        var bList = arr2.filter( item => arr1.indexOf(item) < 0);
+
+        var diff = new Set([...aList, ...bList]);
+        return Array.from(diff);
+    }
+
+    unionArrays = (arr1:Array<any>, arr2:Array<any>) => {
+        return [...new Set([...arr1, ...arr2])];
+    }
+
+    intersectionArrays = (arr1:Array<any>, arr2:Array<any>) => {
+        return Array.from(new Set([...arr1].filter(x => arr2.indexOf(x)>=0)));
+    }
+
+    removeDuplicates = (arr:Array<any>) => {
+        return Array.from(new Set([...arr]));
+    }
+
+    compactArray = (arr:Array<any>) => {
+        return arr.filter( item => item);
+    }
+
+    flattenArray = (arr:Array<any>)  => {
+        let index
+        while ( (index = arr.findIndex(el => Array.isArray(el))) > -1 ) {
+            arr.splice(index, 1, ...arr[index])
+        }
+        return arr
+    }
+
+
 }
 
 export var Utils = new Commons();
