@@ -1,11 +1,14 @@
 {
   "name": "commons-utils",
-  "version": "1.0.7",
+  "version": "0.0.0-semantically-released",
   "description": "Common Utilities",
   "main": "dist/commons-utils.js",
   "scripts": {
+    "commit": "git-cz",
+    "prepublish:es5": "tsc --target ES5",
     "prepublish": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
@@ -27,6 +30,7 @@
   },
   "homepage": "https://github.com/pujansrt/commons-utils",
   "devDependencies": {
-    "typescript": "2.1.4"
+    "typescript": "2.1.4",
+    "semantic-release": "^6.3.2"
   }
 }

@@ -1,13 +1,20 @@
-<img src="https://img.shields.io/badge/Ecmascript-6%2B-brightgreen.svg">
-
-# commons-utils
+# Commons Utilities
 
 ## How to use it
 
 1. Using NPM
 
 ```
-npm install commons-utils
+npm install -g commons-utils
+
+
+var Commons = require('../dist/commons-utils.js');
+
+var arr = [1,2,3,4,5];
+
+console.log(Commons.Utils.shuffleArray(arr));
+console.log(Commons.Utils.randomArray(4,15));
+console.log(Commons.Utils.removeItemInArray(arr,3));
 ```
 
 2. In browser
@@ -30,8 +37,6 @@ npm install commons-utils
 ## Available Methods for Arrays
 
 ```
-easifyArray([1,2,3,4,5])[-1];	//5
-
 shuffleArray([1,2,3,4,5]);	//[3,2,4,1,5]
 
 randomArray(6, 10);		//[2, 8, 4, 2, 7, 8]
