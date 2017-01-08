@@ -1,3 +1,8 @@
+<img src="https://img.shields.io/travis/pujansrt/commons-utils.svg">
+<img src="https://img.shields.io/travis/pujansrt/commons-utils/master.svg?label=linux">
+<img src="https://img.shields.io/travis/pujansrt/commons-utils/master.svg?label=windows">
+
+
 # Commons Utilities
 
 ## How to use it
