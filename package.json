@@ -8,8 +8,11 @@
     "check-coverage": "nyc check-coverage --staements 100 --branches 100 --functions 100 --lines 100",
     "cover": "nyc npm t",
     "test": "mocha src/commons-utils.test.js --compilers js:babel-register",
-    "prepublish:es5": "tsc --target ES5",
-    "prepublish": "tsc",
+    "prebuild": "rimraf dist",
+    "build": "npm-run-all --parallel build:*",
+    "buildes5": "tsc --target ES5",
+    "build:ts": "tsc",
+    "build:main": "babel --copy-files --out-dir dist --ignore *.test.js src",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
