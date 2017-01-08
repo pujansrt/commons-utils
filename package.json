@@ -54,6 +54,10 @@
     "semantic-release": "6.3.2",
     "webpack": "1.14.0"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "config": {
     "ghooks": {
       "pre-commit": "npm run cover && npm run check-coverage"
