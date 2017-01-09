@@ -11,14 +11,12 @@
 
 ```
 npm install -g commons-utils
-
 var Commons = require('commons-utils');
 ```
 
 ### In browser
 
 ```
-<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -26,7 +24,6 @@ var Commons = require('commons-utils');
   <title>Commons Utils Test</title>
   <script src="https://npmcdn.com/commons-utils@latest"></script>
   <script>
-    <!-- Use here -->
     var ArrayUtils = new Commons();
     console.log(ArrayUtils.random(10,20));
   </script>
