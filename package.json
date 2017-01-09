@@ -8,6 +8,7 @@
     "check-coverage": "nyc check-coverage --staements 100 --branches 100 --functions 100 --lines 100",
     "cover": "nyc npm t",
     "test": "mocha src/commons-utils.test.js --compilers js:babel-register",
+    "test:w": "mocha src/commons-utils.test.js --compilers js:babel-register -w",
     "prebuild": "rimraf dist",
     "build": "npm-run-all --parallel build:*",
     "buildes5": "tsc --target ES5",
