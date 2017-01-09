@@ -15,5 +15,7 @@ var arr2 = ['a',5,'e',3];
 
 // console.log(Commons.Utils.compactArray([1,2,false,,,'',undefined,null]));
 
-console.log(Commons.Utils.flattenArray([1, [2, 'a', { b: 1, c: [2, 3] } ], [3, 4, [5, 6]]]));
+// console.log(Commons.ArrayUtils.flatten([1, [2, 'a', { b: 1, c: [2, 3] } ], [3, 4, [5, 6]]]));
 // /[ 1, 2, 'a', { b: 1, c: [ 2, 3 ] }, 3, 4, 5, 6 ]
+
+console.log(Commons.ArrayUtils.reverse(arr));

@@ -7,23 +7,15 @@
 
 ## How to use it
 
-1. Using NPM
+### Using NPM
 
 ```
 npm install -g commons-utils
 
-
 var Commons = require('commons-utils');
-
-var arr = [1,2,3,4,5];
-
-console.log(Commons.Utils.easifyArray(arr)[-1]);
-console.log(Commons.Utils.shuffleArray(arr));
-console.log(Commons.Utils.randomArray(4,15));
-console.log(Commons.Utils.removeItemInArray(arr,3));
 ```
 
-2. In browser
+### In browser
 
 ```
 <!DOCTYPE html>
@@ -38,7 +30,6 @@ console.log(Commons.Utils.removeItemInArray(arr,3));
   </script>
   </head>
 <body>
-
 </body>
 </html>
 ```
@@ -46,15 +37,15 @@ console.log(Commons.Utils.removeItemInArray(arr,3));
 ## Available Methods for Arrays
 
 ```
-//Access array also in negative index form (as in Python)
-easifyArray(arr)[-1]; // 5
-
-//Shuffle array randomly
-shuffleArray([1,2,3,4,5]);	//[3,2,4,1,5]
-
-//Get array of random numbers
-randomArray(6, 10);		//[2, 8, 4, 2, 7, 8]
-
-//remove item from an array by its value.
-removeItemInArray([1,2,3,4,5,6,7], 3); //[1,2,4,5,6,7]
+Commons.ArrayUtils.easify(arr);
+Commons.ArrayUtils.shuffle(arr);
+Commons.ArrayUtils.random(length, max);
+Commons.ArrayUtils.remove(arr, key);
+Commons.ArrayUtils.diff(arr1, arr2);
+Commons.ArrayUtils.union(arr1, arr2);
+Commons.ArrayUtils.intersection(arr1, arr2);
+Commons.ArrayUtils.removeDuplicates(arr);
+Commons.ArrayUtils.compact(arr);
+Commons.ArrayUtils.flatten(arr);
+Commons.ArrayUtils.chunk(arr, at);
 ```
