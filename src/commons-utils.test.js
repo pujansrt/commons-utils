@@ -18,7 +18,6 @@ describe('commons-utils',function () {
         expect(Commons.ArrayUtils.random(5, 20)).to.have.length.above(2);
     });
 
-
     it('remove', function () {
         expect(Commons.ArrayUtils.remove(arr,3)).to.eqls([1,2,4,5]);
     });
