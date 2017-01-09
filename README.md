@@ -48,4 +48,5 @@ Commons.ArrayUtils.removeDuplicates(arr);
 Commons.ArrayUtils.compact(arr);
 Commons.ArrayUtils.flatten(arr);
 Commons.ArrayUtils.chunk(arr, at);
+Commons.ArrayUtils.reverse(arr);
 ```
