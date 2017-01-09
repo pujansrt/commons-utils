@@ -27,6 +27,8 @@ var Commons = require('commons-utils');
   <script src="https://npmcdn.com/commons-utils@latest"></script>
   <script>
     <!-- Use here -->
+    var ArrayUtils = new Commons();
+    console.log(ArrayUtils.random(10,20));
   </script>
   </head>
 <body>
