@@ -32,5 +32,5 @@ var arr2 = ['a',5,'e',3];
 
 console.log(Commons.BrowserUtils.queryString('http://google.com/idd?name=Pujan+sriv&id=3434343'));
 
-console.log(Commons.StringUtils.formatCurrency('.00'));
+console.log(Commons.StringUtils.guid());
 

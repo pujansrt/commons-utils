@@ -34,6 +34,7 @@ Commons.StringUtils.removeHtmlTags(value);
 Commons.StringUtils.isInteger(value);
 Commons.StringUtils.validateEmail(value);
 Commons.StringUtils.formatCurrency(value);
+Commons.StringUtils.guid();
 ```
 
 ## How to use it

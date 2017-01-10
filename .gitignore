@@ -20,7 +20,7 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 .nb-gradle/
- 
+.nyc_output 
  
 ### Eclipse ###
 *.pydevproject

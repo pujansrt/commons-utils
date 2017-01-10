@@ -69,10 +69,10 @@ describe('commons-utils',function () {
 
     it('random', function () {
         expect(Commons.StringUtils.random(32)).to.have.length(32);
-
         expect(Commons.StringUtils.random(32,'numerical')).to.have.length(32);
-
     });
 
-
+    it('GUID', function () {
+        expect(Commons.StringUtils.guid(32).split('-').join('')).to.have.length(32);
+    });
 });
