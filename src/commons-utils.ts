@@ -81,5 +81,128 @@ export class Commons {
     }
 
 }
+export class Browsers {    
+    queryString = (query:string) => {
+        var query_string:any = {};
+        //var query = window.location.search.substring(1);
+        query = query.split('?')[1];
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (typeof query_string[pair[0]] === "undefined") {
+                query_string[pair[0]] = decodeURIComponent(pair[1]);
+            } else if (typeof query_string[pair[0]] === "string") {
+                var arr = [ query_string[pair[0]], decodeURIComponent(pair[1]) ];
+                query_string[pair[0]] = arr;
+            } else {
+                query_string[pair[0]].push(decodeURIComponent(pair[1]));
+            }
+        }
+        return query_string;  
+    }
+}
+
+export class Strings {    
+    random = (length:number,type:string) => {
+        var chars;
+
+        switch (type) {
+            case 'alphabetical':
+                chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                break;
+            case 'numerical':
+                chars = '0123456789';
+                break;
+            default:
+                chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        }
+
+        var result = '';
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+
+        //in case starts with 0 we need to remove it.    
+        while(type == 'numerical' && result.startsWith("0")){
+            result = chars[Math.floor(Math.random() * chars.length)] + result;
+        }    
+
+        return result;
+    }
+
+    isEmpty = (a:string) => {
+    
+        if (!a || a.length === 0 || a === "" || typeof a === "undefined" || !/[^\s]/.test(a) || /^\s*$/.test(a)
+            || a.replace(/\s/g, "") === "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    isString = (a:string) => {
+        if (a === undefined || a === null){
+            return false;
+        }
+        return typeof a === 'string' ||  a instanceof String;
+    }
+
+    isJsonString = (a:string) => {
+        try {
+            JSON.parse(a);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
+    capitalize = (string = '') => [...string].map((char, index) => index ? char : char.toUpperCase()).join('');
+
+    removeHtmlTags = (a:string) => {
+        return a.replace(/(<([^>]+)>)/ig,"");
+    }
+
+    isInteger = (a:any) => {
+       return !isNaN(parseFloat(a)) && isFinite(a);
+    }
+
+    validateEmail = (email:string) => {
+        var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (filter.test(email)) {
+            return true;
+        }
+        return false;
+    }
+
+    formatCurrency = (value:string) => {
+        var buf = "";
+        var sBuf = "";
+        var j = 0;
+        value = String(value);
+ 
+        if (value.indexOf(".") > 0) {
+            buf = value.substring(0, value.indexOf("."));
+        } else {
+            buf = value;
+        }
+        if (buf.length%3!=0&&(buf.length/3-1) > 0) {
+            sBuf = buf.substring(0, buf.length%3) + ",";
+            buf = buf.substring(buf.length%3);
+        }
+        j = buf.length;
+        for (var i = 0; i <(j/3-1); i++) {
+            sBuf = sBuf+buf.substring(0, 3) + ",";
+            buf = buf.substring(3);
+        }
+        sBuf = sBuf+buf;
+        if (value.indexOf(".") > 0) {
+            value = sBuf + value.substring(value.indexOf("."));}
+        else {
+            value = sBuf;
+        }
+        return value;
+    }
+}
+
 
 export var ArrayUtils = new Commons();
+export var BrowserUtils = new Browsers();
+export var StringUtils = new Strings();

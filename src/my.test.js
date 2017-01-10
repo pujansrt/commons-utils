@@ -18,4 +18,19 @@ var arr2 = ['a',5,'e',3];
 // console.log(Commons.ArrayUtils.flatten([1, [2, 'a', { b: 1, c: [2, 3] } ], [3, 4, [5, 6]]]));
 // /[ 1, 2, 'a', { b: 1, c: [ 2, 3 ] }, 3, 4, 5, 6 ]
 
-console.log(Commons.ArrayUtils.reverse(arr));
+//console.log(Commons.StringUtils.random(32));
+//console.log(Commons.StringUtils.random(32,'numerical'));
+//console.log(Commons.StringUtils.isEmpty());
+//console.log(Commons.StringUtils.isEmpty(''));
+//console.log(Commons.StringUtils.isEmpty(null));
+//console.log(Commons.StringUtils.isEmpty(undefined));
+//console.log(Commons.StringUtils.isJsonString('{}'));
+//console.log(Commons.StringUtils.isJsonString('[]'));
+//console.log(Commons.StringUtils.isJsonString('n'));
+//console.log(Commons.StringUtils.isString('{}'));
+
+
+console.log(Commons.BrowserUtils.queryString('http://google.com/idd?name=Pujan+sriv&id=3434343'));
+
+console.log(Commons.StringUtils.formatCurrency('.00'));
+

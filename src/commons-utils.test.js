@@ -53,4 +53,26 @@ describe('commons-utils',function () {
     it('reverse', function () {
         expect(Commons.ArrayUtils.reverse(['a','b','c','d','e'],2)).to.eqls(['e', 'd', 'c', 'b', 'a']);
     });
+
+    it('format currency', function () {
+        expect(Commons.StringUtils.formatCurrency('1234.56')).to.eqls('1,234.56');
+    });
+
+    it('validateEmail', function () {
+        expect(Commons.StringUtils.validateEmail('pujansrt@gmail.com')).to.be.true;
+    });
+
+
+    it('removeHtmlTags', function () {
+        expect(Commons.StringUtils.removeHtmlTags('<div><p>hello</p></div>')).to.eqls('hello');
+    });
+
+    it('random', function () {
+        expect(Commons.StringUtils.random(32)).to.have.length(32);
+
+        expect(Commons.StringUtils.random(32,'numerical')).to.have.length(32);
+
+    });
+
+
 });
