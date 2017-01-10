@@ -5,7 +5,7 @@
   "main": "dist/commons-utils.js",
   "scripts": {
     "commit": "git-cz",
-    "check-coverage": "nyc check-coverage --staements 100 --branches 100 --functions 100 --lines 100",
+    "check-coverage": "nyc check-coverage --staements 50 --branches 10 --functions 50 --lines 50",
     "cover": "nyc npm t",
     "test": "mocha src/commons-utils.test.js --compilers js:babel-register",
     "test:w": "mocha src/commons-utils.test.js --compilers js:babel-register -w",

@@ -122,7 +122,7 @@ export class Strings {
 
         //in case starts with 0 we need to remove it.    
         while(type == 'numerical' && result.startsWith("0")){
-            result = chars[Math.floor(Math.random() * chars.length)] + result;
+            result = chars[Math.floor(Math.random() * chars.length)] + result.substring(1,result.length);
         }    
 
         return result;
