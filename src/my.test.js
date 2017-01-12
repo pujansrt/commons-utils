@@ -34,3 +34,7 @@ console.log(Commons.BrowserUtils.queryString('http://google.com/idd?name=Pujan+s
 
 console.log(Commons.StringUtils.guid());
 
+console.log(Commons.StringUtils.validateCreditCard('4111 1111 1111 1111'));
+console.log(Commons.StringUtils.validateCreditCard('5500 0000 0000 0004'));
+console.log(Commons.StringUtils.validateCreditCard('3400 0000 0000 009'));
+console.log(Commons.StringUtils.validateCreditCard('3000-0000-0000-04'));

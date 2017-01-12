@@ -35,6 +35,7 @@ Commons.StringUtils.isInteger(value);
 Commons.StringUtils.validateEmail(value);
 Commons.StringUtils.formatCurrency(value);
 Commons.StringUtils.guid();
+Commons.StringUtils.validateCreditCard(value));
 ```
 
 ## How to use it

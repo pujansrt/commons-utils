@@ -208,6 +208,62 @@ export class Strings {
     s4 = () => {
           return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }
+
+    validateCreditCard = (cardnumber:string,cardtype:string='all') => {
+        if (/[^0-9-\s]+/.test(cardnumber)) return false;
+
+        // The Luhn Algorithm. It's so pretty.
+        var nCheck = 0, nDigit = 0, bEven = false;
+        cardnumber = cardnumber.replace(/\D/g, "");
+
+        for (var n = cardnumber.length - 1; n >= 0; n--) {
+            var cDigit = cardnumber.charAt(n),
+                nDigit = parseInt(cDigit, 10);
+
+            if (bEven) {
+                if ((nDigit *= 2) > 9) nDigit -= 9;
+            }
+            nCheck += nDigit;
+            bEven = !bEven;
+        }
+        return (nCheck % 10) == 0;
+        
+        //TODO replace non numeric characters first from cardnumber
+
+        //American Express    3400 0000 0000 009
+        //CARTE BLANCHE    3000 0000 0000 04
+        //Discover    6011 0000 0000 0004
+        //Diners Club    3852 0000 0232 37
+        //enRoute    2014 0000 0000 009
+        //JCB    3530 111333300000
+        //MasterCard    5500 0000 0000 0004
+        //Solo    6334 0000 0000 0004
+        //Switch    4903 0100 0000 0009
+        //Visa    4111 1111 1111 1111
+        //Laser    6304 1000 0000 0008
+
+        // switch (cardtype) {
+        //     case 'AMERICAN_EXPRESS':
+        //         //TODO
+        //         break;
+        //     case 'CARTE_BLANCHE':
+        //         //TODO
+        //         break;    
+        //     case 'DISCOVER':    
+        //     case 'DINERS_CLUB':    
+        //     case 'ENROUTE':    
+        //     case 'JCB':   
+        //     case 'MASTERCARD':
+        //     case 'SOLO':
+        //     case 'SWITCH':
+        //     case 'VISA':
+        //     case 'LASER':
+
+        //     //var regex = new RegExp("^[0-9]{16}$");
+        //     //if (!regex.test(cardnumber))
+
+        // }
+    }
 }
 
 
