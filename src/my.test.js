@@ -31,10 +31,12 @@ var arr2 = ['a',5,'e',3];
 
 
 console.log(Commons.BrowserUtils.queryString('http://google.com/idd?name=Pujan+sriv&id=3434343'));
-
 console.log(Commons.StringUtils.guid());
+console.log(Commons.StringUtils.validateDate('2014/10/10','YMD'));
 
-console.log(Commons.StringUtils.validateCreditCard('4111 1111 1111 1111'));
-console.log(Commons.StringUtils.validateCreditCard('5500 0000 0000 0004'));
-console.log(Commons.StringUtils.validateCreditCard('3400 0000 0000 009'));
-console.log(Commons.StringUtils.validateCreditCard('3000-0000-0000-04'));
+console.log(Commons.StringUtils.validateCitizenId('7145620509547','TH'));
+console.log('3688699975685=',Commons.StringUtils.validateCitizenId('3688699975685','TH'));
+console.log(Commons.StringUtils.validateCitizenId('1100800092310','TH'));
+
+
+

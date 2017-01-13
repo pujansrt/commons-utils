@@ -38,6 +38,23 @@ Commons.StringUtils.guid();
 Commons.StringUtils.validateCreditCard(value));
 ```
 
+## Validate Citizen Id card Number
+
+```
+Commons.StringUtils.validateCitizenId(idcardnumber,country));
+```
+Countries that are supported -
+
+```
+Brazil i.e. "BR"
+Croatia "HR"
+Ireland i.e. "IE"
+San Marino ie "SM"
+Thailand i.e. "TH"
+Turkey i.e. "TR":
+```
+
+
 ## How to use it
 
 ### Using NPM
