@@ -5,7 +5,7 @@
 
 # Commons Utilities
 
-## Available Methods for Arrays
+## Common Available Methods for Arrays
 
 ```
 Commons.ArrayUtils.easify(arr);
@@ -69,9 +69,6 @@ var Commons = require('commons-utils');
 ```
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Commons Utils Test</title>
   <script src="https://npmcdn.com/commons-utils@latest"></script>
   <script>
     var ArrayUtils = new Commons();
