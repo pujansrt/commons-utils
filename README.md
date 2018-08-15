@@ -5,45 +5,54 @@
 
 # Commons Utilities
 
-## Common Available Methods for Arrays
+## Common Available Methods
 
 ```
-Commons.ArrayUtils.easify(arr);
-Commons.ArrayUtils.shuffle(arr);
-Commons.ArrayUtils.random(length, max);
-Commons.ArrayUtils.remove(arr, key);
-Commons.ArrayUtils.diff(arr1, arr2);
-Commons.ArrayUtils.union(arr1, arr2);
-Commons.ArrayUtils.intersection(arr1, arr2);
-Commons.ArrayUtils.removeDuplicates(arr);
-Commons.ArrayUtils.compact(arr);
-Commons.ArrayUtils.flatten(arr);
-Commons.ArrayUtils.chunk(arr, at);
-Commons.ArrayUtils.reverse(arr);
+remove ;
+shuffle ;
+sample ;
+uniq ;
+compact ;
+reverse ;
+union ;
+intersection ;
+diff ;
+flatten ;
+last ;
+findIndices ;
+camelCase ;
+pascalCase ;
+titleCase ;
+toggleCase ;
+swapCase ;
+dotCase ;
+random ;
+randomColor ;
+guid ;
+formatCurrency ;
+isEmpty ;
+isInteger ;
+isJsonString ;
+isString ;
+removeHtmlTags ;
+removeObject ;
+validateEmail;
+validateUrl;
+validateImage;
+validateUSA_SSN;
+validateDate;
+validateCreditCard;
+isValidCreditCard;
+validateCitizenId;
 ```
 
-## Available Methods for String
+## validateCitizenId
 
-```
-Commons.StringUtils.random(length,['numerical','alphabetical']);
-Commons.StringUtils.isEmpty(value);
-Commons.StringUtils.isString(value);
-Commons.StringUtils.isJsonString(value);
-Commons.StringUtils.capitalize(value);
-Commons.StringUtils.removeHtmlTags(value);
-Commons.StringUtils.isInteger(value);
-Commons.StringUtils.validateEmail(value);
-Commons.StringUtils.formatCurrency(value);
-Commons.StringUtils.guid();
-Commons.StringUtils.validateCreditCard(value));
+```json
+validateCitizenId()
 ```
 
-## Validate Citizen Id card Number
-
-```
-Commons.StringUtils.validateCitizenId(idcardnumber,country));
-```
-Countries that are supported -
+### Countries that are supported 
 
 ```
 Brazil i.e. "BR"
@@ -71,8 +80,7 @@ var Commons = require('commons-utils');
 <head>
   <script src="https://npmcdn.com/commons-utils@latest"></script>
   <script>
-    var ArrayUtils = new Commons();
-    console.log(StringUtils.random(10,20));
+    console.log(CommonsUtils.random(10,20));
   </script>
   </head>
 <body>

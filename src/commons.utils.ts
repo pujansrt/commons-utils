@@ -1,13 +1,210 @@
+export class ArraysUtils {
+
+    static shuffle = (arr: any[]) => {
+        for (let i = arr.length; i > 0; i--) {
+            let j = Math.floor(Math.random() * i);
+            [arr[i - 1], arr[j]] = [arr[j], arr[i - 1]];
+        }
+        return arr;
+    };
+
+    static sample = (arr: any[]) => {
+        return arr[Math.floor(Math.random() * arr.length - 1)];
+    };
+
+    static uniq = (arr: any[]) => Array.from(new Set([...arr]));
+
+    static compact = (arr: any[]) => arr.filter(item => item);
+
+    static reverse = (arr: any[]) => arr.reverse();
+
+    static union = (arr1: any[], arr2: any[]) => [...new Set([...arr1, ...arr2])];
+
+    static intersection = (arr1: any[], arr2: any[]) => Array.from(new Set([...arr1].filter(x => arr2.indexOf(x) >= 0)));
+
+    static diff = (arr1: any[], arr2: any[]) => {
+        const a = new Set(arr1);
+        const b = new Set(arr2);
+        return Array.from(new Set([...a].filter(x => !b.has(x))));
+    };
+
+    static flatten = (array: Array<any>): Array<any> => {
+        const flattenedArray: Array<any> = [].concat(...array);
+        return flattenedArray.some(Array.isArray) ? ArraysUtils.flatten(flattenedArray) : flattenedArray;
+    };
+
+    static last = (arr: any[]) => arr[arr.length - 1];
+
+    static findIndices = (arr: any[], item: any) => {
+        const ret: number[] = [];
+        for (const i in arr) {
+            if (arr[i] === item) ret.push(+i);
+        }
+        return ret;
+    };
+
+    static remove = (key:any, input: any) => {
+        if (input instanceof Array) {
+            input.splice(input.indexOf(key), 1);
+            return input.indexOf(key) < 0 ? input : ArraysUtils.remove(key, input);
+        }
+        else return ObjectsUtils.remove(key, input);
+    }
+}
+
+export class ObjectsUtils{
+    static remove = (key, {[key]: remove, ...rest}) => rest;
+}
+
+export class StringsUtils {
+
+    /**
+     * hello javascript => helloJavascript
+     *
+     * @param text
+     */
+    static camelCase = (text: string) => text.replace(/\s(.)/g, ($1) => $1.toUpperCase()).replace(/\s/g, '');
+
+    /**
+     * hello javascript => HelloJavascript
+     *
+     * @param text
+     */
+    static pascalCase = (text: string) => text.replace(/(\w)(\w*)/g, (g0, g1, g2) => g1.toUpperCase() + g2.toLowerCase()).replace(/\s/g, '');
+
+    /**
+     * hello javascript => Hello Javascript
+     *
+     * @param string
+     */
+    static titleCase = (text: any) => text.split(' ').map((w) => w.charAt(0).toUpperCase() + w.substr(1, w.length - 1)).join(' ');
+
+    /**
+     * Hello => hELLO
+     *
+     * @param text
+     */
+    static toggleCase = (text: any) => [...text].map((c) => c.charCodeAt(0) <= 90 ? c.toLowerCase() : c.toUpperCase()).join('');
+
+    static swapCase = (text: string) => StringsUtils.toggleCase(text);
+
+    /**
+     * 1. space is replaced with dot
+     * 2. Capitalize letter is replaced with dot and small letter of that letter
+     * 3. multiple dots can not come together
+     * 4. lowercase everything
+     *
+     * @param text
+     */
+    static dotCase = (text: string) => {
+        text = text.replace(/\s/g, '.');
+        text = [...text].map((w) => w.charCodeAt(0) <= 90 ? '.' + w.toLowerCase() : w).join('').replace(/\.+/g, '.');
+        return text;
+    };
+
+    static random = (length: number, type: string = "alphabetical") => {
+        var chars;
+
+        switch (type) {
+            case 'alphabetical':
+                chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                break;
+            case 'numerical':
+                chars = '0123456789';
+                break;
+            case 'all':
+                chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*_~';
+                break;
+            default:
+                chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        }
+
+        let result: string = '';
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+
+        //in case starts with 0 we need to remove it.
+        while (type == 'numerical' && result.startsWith("0")) {
+            result = chars[Math.floor(Math.random() * chars.length)] + result.substring(1, result.length);
+        }
+
+        return result;
+    };
+
+    static isEmpty = (a: string) => {
+
+        if (!a || a.length === 0 || a === "" || typeof a === "undefined" || !/[^\s]/.test(a) || /^\s*$/.test(a) || a.replace(/\s/g, "") === "") {
+            return true;
+        }
+        return false;
+    };
+
+    static isString = (a: any) => {
+        if (a === undefined || a === null) {
+            return false;
+        }
+        return typeof a === 'string' || a instanceof String;
+    };
+
+    static isJsonString = (a: string) => {
+        if (!StringsUtils.isString(a)) return false;
+
+        try {
+            JSON.parse(a);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    };
+
+
+    static removeHtmlTags = (a: string) => {
+        return a.replace(/(<([^>]+)>)/ig, "");
+    };
+
+    static isInteger = (a: any) => {
+        return !isNaN(parseFloat(a)) && isFinite(a);
+    };
+
+    static formatCurrency = (value: number) => {
+        return parseFloat('' + value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+    };
+
+    static guid = (hyphen: boolean = false) => {
+        const hyphenChar = hyphen ? '-' : '';
+
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        }
+
+        return s4() + s4() + hyphenChar + s4() + hyphenChar + s4() + hyphenChar + s4() + hyphenChar + s4() + s4() + s4();
+    };
+
+    static randomColor = (string: string, s: number = 60, l: number = 70) => {
+        if (!string) return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+
+        let hash = 0;
+        for (let i = 0; i < string.length; i++) {
+            hash = string.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        const h = hash % 360;
+        return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
+    };
+
+}
+
+
+
 export class ValidationsUtils {
 
-    // validateEmail = (email: string) => {
-    //     var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    //     if (filter.test(email)) {
-    //         return true;
-    //     }
-    //     return false;
-    // };
-    //
+    validateEmail = (email: string) => {
+        var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (filter.test(email)) {
+            return true;
+        }
+        return false;
+    };
+
     // validateUrl = (value: string) => {
     //     var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
     //     if (regexp.test(value.toLowerCase())) {

@@ -1,12 +1,18 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
         "target": "es6",
-        "noImplicitAny": true,
+        "module": "commonjs",
         "sourceMap": false,
+        "lib": [
+            "es6",
+            "dom",
+            "esnext"
+        ],
         "outDir": "dist"
     },
-    "files": [
-      "src/commons-utils.ts"
+    "exclude": [
+        "node_modules",
+        "dist",
+        "tests"
     ]
 }

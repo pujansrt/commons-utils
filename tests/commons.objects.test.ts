@@ -1,8 +1,8 @@
-import {CommonsUtils} from "../src/commons.index";
+import {removeObject} from "../src/commons.utils";
 
 describe('Remove Unit', () => {
 
     test('Array Indices Scenarios', () => {
-        expect(CommonsUtils.removeObject('name', {name: 'a'})).toEqual({});
+        expect(removeObject('name', {name: 'a'})).toEqual({});
     });
 });
