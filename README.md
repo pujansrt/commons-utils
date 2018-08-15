@@ -73,19 +73,4 @@ npm install -g commons-utils
 var Commons = require('commons-utils');
 ```
 
-### In browser
-
-```
-<html>
-<head>
-  <script src="https://npmcdn.com/commons-utils@latest"></script>
-  <script>
-    console.log(CommonsUtils.random(10,20));
-  </script>
-  </head>
-<body>
-</body>
-</html>
-```
-
 

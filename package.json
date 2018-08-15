@@ -1,6 +1,6 @@
 {
   "name": "commons-utils",
-  "version": "0.0.0-semantically-released",
+  "version": "2.0.0",
   "description": "Common Utilities",
   "main": "dist/commons.utils.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "cover": "nyc npm t",
     "test": "jest",
     "prebuild": "rimraf dist",
-    "build": "tsc --project ./ --removeComments --downlevelIteration",
+    "build": "npm run prebuild && tsc --project ./ --removeComments --downlevelIteration",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
