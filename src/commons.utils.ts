@@ -9,7 +9,7 @@ class ArraysUtils {
     };
 
     static sample = (arr: any[]) => {
-        return arr[Math.floor(Math.random() * arr.length - 1)];
+        return arr[Math.floor(Math.random() * (arr.length - 1))];
     };
 
     static uniq = (arr: any[]) => Array.from(new Set([...arr]));
