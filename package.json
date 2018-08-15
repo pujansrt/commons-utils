@@ -2,7 +2,7 @@
   "name": "commons-utils",
   "version": "0.0.0-semantically-released",
   "description": "Common Utilities",
-  "main": "dist/commons.index.js",
+  "main": "dist/commons.utils.js",
   "scripts": {
     "commit": "git-cz",
     "check-coverage": "nyc check-coverage --staements 0 --branches 0 --functions 0 --lines 0",
