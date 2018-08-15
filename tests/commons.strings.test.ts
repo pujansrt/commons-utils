@@ -6,7 +6,7 @@ import {
     isJsonString, isString,
     pascalCase,
     random,
-    randomColor, removeHtmlTags,
+    removeHtmlTags,
     titleCase,
     toggleCase
 } from "../src/commons.utils";
@@ -37,12 +37,11 @@ describe('Case Unit', () => {
     });
 
     test('Random Scenarios', () => {
-        expect(random(10).length).toEqual(10);
-        expect(random(10,'alphabetical').length).toEqual(10);
+        expect(random.alphabetical(10).length).toEqual(10);
     });
 
     test('RandomColor Scenarios', () => {
-        expect(randomColor('')).toContain('#');
+        expect(random.color('')).toContain('#');
     });
 
     test('Guid Scenarios', () => {

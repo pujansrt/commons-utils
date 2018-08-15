@@ -8,34 +8,44 @@
 ## Common Available Methods
 
 ```
-remove ;
-shuffle ;
-sample ;
-uniq ;
-compact ;
-reverse ;
-union ;
-intersection ;
-diff ;
-flatten ;
-last ;
-findIndices ;
-camelCase ;
-pascalCase ;
-titleCase ;
-toggleCase ;
-swapCase ;
-dotCase ;
-random ;
-randomColor ;
-guid ;
-formatCurrency ;
-isEmpty ;
-isInteger ;
-isJsonString ;
-isString ;
-removeHtmlTags ;
-removeObject ;
+clone;
+remove;
+shuffle;
+sample;
+uniq;
+compact;
+reverse;
+union;
+intersection;
+diff;
+flatten;
+last;
+findIndices;
+camelCase;
+pascalCase;
+titleCase;
+toggleCase;
+swapCase;
+dotCase;
+random;
+guid;
+formatCurrency;
+isEmpty;
+isInteger;
+isJsonString;
+isString;
+removeHtmlTags;
+extractURLs;
+extractPhones;
+extractEmails;
+extractPercent;
+extractNumbers;
+extractUSCurrencyAndNumbers;
+extractHyphenated;
+extractTime;
+extractDotted;
+extractQuoted;
+replaceAt;
 validateEmail;
 validateUrl;
 validateImage;
@@ -66,11 +76,18 @@ Turkey i.e. "TR":
 
 ## How to use it
 
-### Using NPM
+### Install
 
+```py
+npm install -S commons-utils
 ```
-npm install -g commons-utils
-var Commons = require('commons-utils');
+
+### Code Sample
+
+```js
+const CommonsUtils = require('commons-utils');
+
+console.log(CommonsUtils.dotCase('userName')); //user.name
 ```
 
 

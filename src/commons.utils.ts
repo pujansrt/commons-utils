@@ -1,5 +1,12 @@
 class ArraysUtils {
 
+    static clone = (input: any) => {
+        if (input instanceof Array) {
+            return [...input];
+        }
+        return {...input};
+    };
+
     static shuffle = (arr: any[]) => {
         for (let i = arr.length; i > 0; i--) {
             let j = Math.floor(Math.random() * i);
@@ -14,7 +21,8 @@ class ArraysUtils {
 
     static uniq = (arr: any[]) => Array.from(new Set([...arr]));
 
-    static compact = (arr: any[]) => arr.filter(item => item);
+    // Removes null, empty, undefined, falsy values from list
+    static compact = (arr: any[]) => arr.filter(Boolean);
 
     static reverse = (arr: any[]) => arr.reverse();
 
@@ -43,7 +51,7 @@ class ArraysUtils {
         return ret;
     };
 
-    static remove = (key:any, input: any) => {
+    static remove = (key: any, input: any) => {
         if (input instanceof Array) {
             input.splice(input.indexOf(key), 1);
             return input.indexOf(key) < 0 ? input : ArraysUtils.remove(key, input);
@@ -52,8 +60,10 @@ class ArraysUtils {
     }
 }
 
-class ObjectsUtils{
+class ObjectsUtils {
     static remove = (key, {[key]: remove, ...rest}) => rest;
+
+    static isEmpty = (obj: Object = {}) => Object.getOwnPropertyNames(obj).length === 0;
 }
 
 class StringsUtils {
@@ -102,35 +112,44 @@ class StringsUtils {
         return text;
     };
 
-    static random = (length: number, type: string = "alphabetical") => {
-        var chars;
+    static random = {
+        default: (min: number = 0, max: number = 100): number => {
+            if (min >= 0 && max <= 1) return +(Math.random() * (0.00 - 1.00) + 1.00).toFixed(2);
+            return ~~(Math.random() * (max - min + 1)) + min;
+        },
+        alphabetical: (length: number): string => {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            return Array.from({length}).map(i => chars[~~(Math.random() * chars.length)]).join("");
+        },
+        numerical: (length: number): number => {
+            const chars = '0123456789';
+            let result: string = '';
+            for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
 
-        switch (type) {
-            case 'alphabetical':
-                chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                break;
-            case 'numerical':
-                chars = '0123456789';
-                break;
-            case 'all':
-                chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*_~';
-                break;
-            default:
-                chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            while (result.startsWith("0")) {
+                result = chars[Math.floor(Math.random() * chars.length)] + result.substring(1, result.length);
+            }
+            return +result;
+        },
+        alphanumeric: (length: number): string => {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
+            return Array.from({length}).map(i => chars[~~(Math.random() * chars.length)]).join("");
+        },
+        color: (text: string, s: number = 60, l: number = 70) => {
+            if (!text) return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                hash = text.charCodeAt(i) + ((hash << 5) - hash);
+            }
+
+            const h = hash % 360;
+            return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
         }
-
-        let result: string = '';
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
-
-        //in case starts with 0 we need to remove it.
-        while (type == 'numerical' && result.startsWith("0")) {
-            result = chars[Math.floor(Math.random() * chars.length)] + result.substring(1, result.length);
-        }
-
-        return result;
     };
 
-    static isEmpty = (a: string) => {
+    static isEmpty = (a: any) => {
+        if (!isString(a)) return ObjectsUtils.isEmpty(a);
 
         if (!a || a.length === 0 || a === "" || typeof a === "undefined" || !/[^\s]/.test(a) || /^\s*$/.test(a) || a.replace(/\s/g, "") === "") {
             return true;
@@ -179,20 +198,70 @@ class StringsUtils {
         return s4() + s4() + hyphenChar + s4() + hyphenChar + s4() + hyphenChar + s4() + hyphenChar + s4() + s4() + s4();
     };
 
-    static randomColor = (string: string, s: number = 60, l: number = 70) => {
-        if (!string) return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+    static extractURLs = (text: string): string[] => {                                                      // Extract URL's
+        return text.match(/(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gi) || [];
+    };
 
-        let hash = 0;
-        for (let i = 0; i < string.length; i++) {
-            hash = string.charCodeAt(i) + ((hash << 5) - hash);
-        }
+    static extractPhones = (text: string): string[] => {                                                    // Extract phone numbers
+        return text.match(/((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))/gi) || [];
+    };
 
-        const h = hash % 360;
-        return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
+    static extractEmails = (text: string): string[] => {
+        return text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi) || [];
+    };
+
+    static extractPercent = (text): string[] => {
+        return text.match(/\d+\%/gi) || [];
+    };
+
+    static extractNumbers = (text: string): string[] => {                                                                                   // Extract numbers from string
+        return text.match(/\d+/gi) || [];
+    };
+
+    static extractUSCurrencyAndNumbers = (text): string[] => {
+        return text.match(/\$?([\d,\.]+)\d(?!%)(?!:)/gi) || [];
+    };
+
+    static extractHyphenated = (text: string): string[] => {                                                                                // Extract hyphenated text
+        return text.match(/([a-zA-Z0-9]+-){1,}[a-zA-Z0-9]+/gi) || [];
+    };
+
+    static extractTime = (text: string): string[] => {                                                                                      // Extract time
+        return text.match(/([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]/gi) || [];
+    };
+
+    static extractDotted = (text: string): string[] => {                                                                                    // E.A.D.P., Washington D.C. or L.A.
+        return text.match(/(?:[a-zA-Z]\.){1,}[a-zA-Z]?/gi) || [];
+    };
+
+    static extractQuoted = (text: string): string[] => {                                                                                    // Is quoted?
+        return text.match(/"([^"]+)"/g) || [];
+    };
+
+    /**
+     * Replace text at particular index with char;
+     *
+     * @param text
+     * @param char
+     * @param index
+     */
+    static replaceAt = (text: string, char: string, index: number): string => {
+        if (index < 0) return text;
+        return text.substr(0, index) + char + text.substr(index + 1);
+    };
+
+    /**
+     * Remove text at index
+     *
+     * @param text
+     * @param index
+     */
+    static removeAt = (text: string, index: number): string => {
+        if (index < 0) return text;
+        return text.substr(0, index) + text.substr(index + 1);
     };
 
 }
-
 
 
 class ValidationsUtils {
@@ -472,7 +541,7 @@ class ValidationsUtils {
     };
 }
 
-
+export const clone = ArraysUtils.clone;
 export const remove = ArraysUtils.remove;
 export const shuffle = ArraysUtils.shuffle;
 export const sample = ArraysUtils.sample;
@@ -485,6 +554,7 @@ export const diff = ArraysUtils.diff;
 export const flatten = ArraysUtils.flatten;
 export const last = ArraysUtils.last;
 export const findIndices = ArraysUtils.findIndices;
+
 export const camelCase = StringsUtils.camelCase;
 export const pascalCase = StringsUtils.pascalCase;
 export const titleCase = StringsUtils.titleCase;
@@ -492,7 +562,6 @@ export const toggleCase = StringsUtils.toggleCase;
 export const swapCase = StringsUtils.swapCase;
 export const dotCase = StringsUtils.dotCase;
 export const random = StringsUtils.random;
-export const randomColor = StringsUtils.randomColor;
 export const guid = StringsUtils.guid;
 export const formatCurrency = StringsUtils.formatCurrency;
 export const isEmpty = StringsUtils.isEmpty;
@@ -500,12 +569,25 @@ export const isInteger = StringsUtils.isInteger;
 export const isJsonString = StringsUtils.isJsonString;
 export const isString = StringsUtils.isString;
 export const removeHtmlTags = StringsUtils.removeHtmlTags;
+export const extractURLs = StringsUtils.extractURLs;
+export const extractPhones = StringsUtils.extractPhones;
+export const extractEmails = StringsUtils.extractEmails;
+export const extractPercent = StringsUtils.extractPercent;
+export const extractNumbers = StringsUtils.extractNumbers;
+export const extractUSCurrencyAndNumbers = StringsUtils.extractUSCurrencyAndNumbers;
+export const extractHyphenated = StringsUtils.extractHyphenated;
+export const extractTime = StringsUtils.extractTime;
+export const extractDotted = StringsUtils.extractDotted;
+export const extractQuoted = StringsUtils.extractQuoted;
+export const replaceAt = StringsUtils.replaceAt;
+
 export const removeObject = ObjectsUtils.remove;
-export const validateEmail= ValidationsUtils.validateEmail;
-export const validateUrl= ValidationsUtils.validateUrl;
-export const validateImage= ValidationsUtils.validateImage;
-export const validateUSA_SSN= ValidationsUtils.validateUSA_SSN;
-export const validateDate= ValidationsUtils.validateDate;
-export const validateCreditCard= ValidationsUtils.validateCreditCard;
-export const isValidCreditCard= ValidationsUtils.isValidCreditCard;
-export const validateCitizenId= ValidationsUtils.validateCitizenId;
+
+export const validateEmail = ValidationsUtils.validateEmail;
+export const validateUrl = ValidationsUtils.validateUrl;
+export const validateImage = ValidationsUtils.validateImage;
+export const validateUSA_SSN = ValidationsUtils.validateUSA_SSN;
+export const validateDate = ValidationsUtils.validateDate;
+export const validateCreditCard = ValidationsUtils.validateCreditCard;
+export const isValidCreditCard = ValidationsUtils.isValidCreditCard;
+export const validateCitizenId = ValidationsUtils.validateCitizenId;
