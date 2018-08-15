@@ -56,12 +56,6 @@ isValidCreditCard;
 validateCitizenId;
 ```
 
-## validateCitizenId
-
-```json
-validateCitizenId()
-```
-
 ### Countries that are supported 
 
 ```
@@ -87,7 +81,19 @@ npm install -S commons-utils
 ```js
 const CommonsUtils = require('commons-utils');
 
-console.log(CommonsUtils.dotCase('userName')); //user.name
+CommonsUtils.dotCase('userName'); //user.name
+CommonsUtils.dotCase("user   Name"); // user.name
+CommonsUtils.pascalCase("user name"); // userName
+CommonsUtils.camelCase("user name"); // userName
+CommonsUtils.titleCase("user name"); // User Name
+CommonsUtils.toggleCase("user name"); // USER NAME
+
+CommonsUtils.random.alphabetical(5); // qemhI
+CommonsUtils.random.alphanumeric(5); // 8Czd5
+CommonsUtils.random.numerical(5); // 91125
+CommonsUtils.random.default(10,100); // 62
+CommonsUtils.random.color("Pujan"); // hsl(210,60%, 70%)
+CommonsUtils.random.color(); // #1a157b
 ```
 
 
