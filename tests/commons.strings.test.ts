@@ -1,14 +1,23 @@
 import {
     camelCase,
-    dotCase, formatCurrency,
+    dotCase,
+    extractEmails,
+    formatCurrency,
     guid,
-    isEmpty, isInteger,
-    isJsonString, isString,
+    isEmpty,
+    isInteger,
+    isJsonString,
+    isString,
+    isValidCreditCard,
     pascalCase,
     random,
     removeHtmlTags,
     titleCase,
-    toggleCase
+    toggleCase,
+    validateCreditCard,
+    validateEmail,
+    validateImage,
+    validateUrl
 } from "../src/commons.utils";
 
 describe('Case Unit', () => {
@@ -66,4 +75,53 @@ describe('Case Unit', () => {
         expect(removeHtmlTags('<html>Hi</html>')).toEqual('Hi');
     });
 
+
+});
+
+describe('Validation', () => {
+
+    test('Email Truthy', () => {
+        expect(validateEmail('pujan@ea.com')).toBeTruthy();
+    });
+
+    test('Email Falsy', () => {
+        expect(validateEmail('pujan@localhost')).toBeFalsy();
+    });
+
+    test('URL Truthy', () => {
+        expect(validateUrl('https://google.com')).toBeTruthy();
+    });
+
+    test('URL Falsy', () => {
+        expect(validateUrl('hts://google.com')).toBeFalsy();
+    });
+
+    test('CreditCard Truthy', () => {
+        expect(validateCreditCard('4111-1111-1111-1111')).toBeTruthy();
+    });
+
+    test('CreditCard Truthy - VISA', () => {
+        expect(isValidCreditCard('VISA', '4111-1111-1111-1111')).toBeTruthy();
+    });
+
+    test('CreditCard Falsy', () => {
+        expect(validateCreditCard('111111111')).toBeFalsy();
+    });
+
+    test('CreditCard Truthy - DINERS CLUB', () => {
+        expect(isValidCreditCard('DINERS_CLUB', '30569309025904')).toBeTruthy();
+        expect(isValidCreditCard('DINERS_CLUB', '38520000023237')).toBeTruthy();
+        expect(isValidCreditCard('DINERS_CLUB', '30000000000004')).toBeTruthy();
+    });
+
+    test('Image Truthy', () => {
+        expect(validateImage('test.jpeg')).toBeTruthy();
+    });
+});
+
+describe.only('Extract', () => {
+
+    test('Email Extract Truthy', () => {
+        expect(extractEmails('some text and one@domain.com and two@domain.com')).toEqual(['one@domain.com', 'two@domain.com']);
+    });
 });

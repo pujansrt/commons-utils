@@ -64,6 +64,14 @@ class ObjectsUtils {
     static remove = (key, {[key]: remove, ...rest}) => rest;
 
     static isEmpty = (obj: Object = {}) => Object.getOwnPropertyNames(obj).length === 0;
+
+    static safeparse = (item, defaultReturn?: any) => {                                                                                               // safe json parsing defaultReturn can be empty array or empty object ([], {})
+        try {
+            return JSON.parse(item);
+        } catch (e) {
+            return defaultReturn;
+        }
+    };
 }
 
 class StringsUtils {
@@ -284,7 +292,7 @@ class ValidationsUtils {
     };
 
     static validateImage = (value: string) => {
-        var exp = /.*\.(gif)|(jpeg)|(jpg)|(png)$/;
+        const exp = /.*\.(gif)|(jpeg)|(jpg)|(png)$/;
         if (value != "") {
             if (value.toLowerCase().match(exp)) {
                 return true;
@@ -414,33 +422,34 @@ class ValidationsUtils {
     };
 
     static isValidCreditCard = (type: string, ccnum: string) => {
+        if (type) type = type.toUpperCase();
+        if (ccnum) ccnum = ccnum.replace(/-/g, '');
+        let re;
         switch (type) {
-            case "AmEx":
-                // American Express: length 15, prefix 34 or 37.
-                var re = /^3[4,7]\d{13}$/;
+            case "AMEX":// American Express: length 15, prefix 34 or 37.
+                re = /^3[4,7]\d{13}$/;
                 break;
-            case "Diners":
-                // Diners: length 14, prefix 30, 36, or 38.
-                var re = /^3[0,6,8]\d{12}$/;
+            case "DINERS":// Diners: length 14, prefix 30, 36, or 38.
+                re = /^3[0,6,8]\d{12}$/;
                 break;
-            case 'CARTE_BLANCHE':
-                //TODO
+            case 'CARTE_BLANCHE': //300 to 305
+                re = /^30[1,2,3,4,5]\d{11}$/;
                 break;
             case 'DISCOVER':
-                var re = /^6011-?\d{4}-?\d{4}-?\d{4}$/;
+                re = /^6011?\d{4}?\d{4}?\d{4}$/;
                 break;
             case 'DINERS_CLUB':
-
+                re = /^((2014|2149)\d{10}|30([0-5])\d{11}|3(6|8)\d{12})$/;
+                break;
             case 'ENROUTE':
             case 'JCB':
-            case 'MASTERCARD':
-                // Mastercard: length 16, prefix 51-55, dashes optional.
-                var re = /^5[1-5]\d{2}-?\d{4}-?\d{4}-?\d{4}$/;
+            case 'MASTERCARD':// Mastercard: length 16, prefix 51-55, dashes optional.
+                re = /^5[1-5]\d{2}?\d{4}?\d{4}?\d{4}$/;
                 break;
             case 'SOLO':
             case 'SWITCH':
             case 'VISA':
-                var re = /^4\d{3}-?\d{4}-?\d{4}-?\d{4}$/;
+                re = /^4\d{3}?\d{4}?\d{4}?\d{4}$/;
                 break;
             case 'LASER':
             default:
@@ -448,17 +457,15 @@ class ValidationsUtils {
         }
 
         if (!re.test(ccnum)) return false;
-        // Remove all dashes for the checksum checks to eliminate negative numbers
         ccnum = ccnum.split("-").join("");
-        // Checksum ("Mod 10")
-        // Add even digits in even length strings or odd digits in odd length strings.
-        var checksum = 0;
-        for (var i = (2 - (ccnum.length % 2)); i <= ccnum.length; i += 2) {
+
+        let checksum = 0;
+        for (let i = (2 - (ccnum.length % 2)); i <= ccnum.length; i += 2) {// Add even digits in even length strings or odd digits in odd length strings.
             checksum += parseInt(ccnum.charAt(i - 1));
         }
-        // Analyze odd digits in even length strings or even digits in odd length strings.
-        for (var i = (ccnum.length % 2) + 1; i < ccnum.length; i += 2) {
-            var digit = parseInt(ccnum.charAt(i - 1)) * 2;
+
+        for (let i = (ccnum.length % 2) + 1; i < ccnum.length; i += 2) {// Analyze odd digits in even length strings or even digits in odd length strings.
+            let digit = parseInt(ccnum.charAt(i - 1)) * 2;
             if (digit < 10) {
                 checksum += digit;
             } else {
@@ -541,6 +548,86 @@ class ValidationsUtils {
     };
 }
 
+
+export class Queue {
+    dataholder = [];
+
+    constructor() {
+
+    }
+
+    public peek() {
+        return this.dataholder.length > 0 ? this.dataholder[0] : null;
+    }
+
+    public add(data) {
+        this.dataholder.push(data);
+    }
+
+    public size() {
+        return this.dataholder.length;
+    }
+
+    public poll() {
+        let ret = null;
+        if (this.dataholder.length > 0) {
+            ret = this.dataholder[0];
+        }
+        this.dataholder.shift();
+        return ret;
+    }
+
+    public print() {
+        console.log(this.dataholder);
+    }
+}
+
+
+export class LimitedQueue extends Queue {
+
+    constructor(private limit) {
+        super();
+    }
+
+    public add(data) {
+        super.add(data);
+        while (this.size() > this.limit) super.poll();
+    }
+}
+
+export class LRUCache {
+    max;
+    cache;
+
+    constructor(max = 10) {
+        this.max = max;
+        this.cache = new Map();
+    }
+
+    get(key) {
+        let item = this.cache.get(key);
+        if (item) {
+            this.cache.delete(key);
+            this.cache.set(key, item);
+        }
+        return item;
+    }
+
+    put(key, val) {
+        if (this.cache.has(key)) this.cache.delete(key);
+        else if (this.cache.size == this.max) this.cache.delete(this.first());
+        this.cache.set(key, val);
+    }
+
+    first() {
+        return this.cache.keys().next().value;
+    }
+
+    public print() {
+        console.log(this.cache);
+    }
+}
+
 export const clone = ArraysUtils.clone;
 export const remove = ArraysUtils.remove;
 export const shuffle = ArraysUtils.shuffle;
@@ -580,8 +667,10 @@ export const extractTime = StringsUtils.extractTime;
 export const extractDotted = StringsUtils.extractDotted;
 export const extractQuoted = StringsUtils.extractQuoted;
 export const replaceAt = StringsUtils.replaceAt;
+export const removeAt = StringsUtils.removeAt;
 
 export const removeObject = ObjectsUtils.remove;
+export const safeparse = ObjectsUtils.safeparse;
 
 export const validateEmail = ValidationsUtils.validateEmail;
 export const validateUrl = ValidationsUtils.validateUrl;

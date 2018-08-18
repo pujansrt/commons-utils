@@ -54,6 +54,7 @@ validateDate;
 validateCreditCard;
 isValidCreditCard;
 validateCitizenId;
+safeparse;
 ```
 
 ### Countries that are supported 
@@ -94,6 +95,20 @@ CommonsUtils.random.numerical(5); // 91125
 CommonsUtils.random.default(10,100); // 62
 CommonsUtils.random.color("Pujan"); // hsl(210,60%, 70%)
 CommonsUtils.random.color(); // #1a157b
+```
+
+### Queue Implementations
+
+```js
+const q = new Queue();
+q.add(1);
+q.add(2);
+q.add(3);
+      
+
+const q = new LimitedQueue(5);
+
+const lruCache = new lruCache(5);
 ```
 
 
