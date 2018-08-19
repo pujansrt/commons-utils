@@ -1,4 +1,4 @@
-import {compact, diff, findIndices, flatten, intersection, last, remove, reverse, sample, shuffle, union, uniq} from "../src/commons.utils";
+import {compact, diff, findIndices, flattenDeep, intersection, last, remove, reverse, sample, shuffle, union, uniq} from "../src/commons.utils";
 
 describe('Remove Unit', () => {
 
@@ -35,7 +35,7 @@ describe('Remove Unit', () => {
     });
 
     test('Array flatten Scenarios', () => {
-        expect(flatten([1, 2, 3, [4, 5]])).toEqual([1, 2, 3, 4, 5]);
+        expect(flattenDeep([1, 2, 3, [4, 5]])).toEqual([1, 2, 3, 4, 5]);
     });
 
     test('Array last Scenarios', () => {

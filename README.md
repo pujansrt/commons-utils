@@ -21,6 +21,7 @@ diff;
 flatten;
 last;
 findIndices;
+
 camelCase;
 pascalCase;
 titleCase;
@@ -32,6 +33,7 @@ guid;
 formatCurrency;
 isEmpty;
 isInteger;
+isNumber;
 isJsonString;
 isString;
 removeHtmlTags;
@@ -46,15 +48,19 @@ extractTime;
 extractDotted;
 extractQuoted;
 replaceAt;
-validateEmail;
-validateUrl;
-validateImage;
-validateUSA_SSN;
-validateDate;
-validateCreditCard;
-isValidCreditCard;
-validateCitizenId;
+removeAt;
+size;
+
+removeObject;
 safeparse;
+
+isValidEmail;
+isValidUrl;
+isValidImage;
+isValidUSA_SSN;
+isValidDate;
+isValidCreditCard;
+isValidCitizenId;
 ```
 
 ### Countries that are supported 

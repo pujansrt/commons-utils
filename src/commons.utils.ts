@@ -36,10 +36,12 @@ class ArraysUtils {
         return Array.from(new Set([...a].filter(x => !b.has(x))));
     };
 
-    static flatten = (array: Array<any>): Array<any> => {
+    static flattenDeep = (array: Array<any>): Array<any> => {
         const flattenedArray: Array<any> = [].concat(...array);
-        return flattenedArray.some(Array.isArray) ? ArraysUtils.flatten(flattenedArray) : flattenedArray;
+        return flattenedArray.some(Array.isArray) ? ArraysUtils.flattenDeep(flattenedArray) : flattenedArray;
     };
+
+    static flattenByDepth = (arr, depth = 1) => arr.reduce((a, v) => a.concat(depth > 1 && Array.isArray(v) ? ArraysUtils.flattenByDepth(v, depth - 1) : v), []);
 
     static last = (arr: any[]) => arr[arr.length - 1];
 
@@ -57,7 +59,26 @@ class ArraysUtils {
             return input.indexOf(key) < 0 ? input : ArraysUtils.remove(key, input);
         }
         else return ObjectsUtils.remove(key, input);
-    }
+    };
+
+    /**
+     * chunk([1, 2, 3, 4, 5], 2); // [[1,2],[3,4],[5]]
+     *
+     * @param arr
+     * @param size
+     */
+    static chunk = (arr, size) => Array.from({length: Math.ceil(arr.length / size)}, (v, i) =>
+        arr.slice(i * size, i * size + size)
+    );
+
+    /**
+     * nthElement(['a', 'b', 'c'], 1); // 'b'
+     * nthElement(['a', 'b', 'b'], -3); // 'a'
+     *
+     * @param arr
+     * @param n
+     */
+    static nthElement = (arr, n = 0) => (n === -1 ? arr.slice(n) : arr.slice(n, n + 1))[0];
 }
 
 class ObjectsUtils {
@@ -72,6 +93,75 @@ class ObjectsUtils {
             return defaultReturn;
         }
     };
+
+    /**
+     * is(Array, [1]); // true
+     * is(ArrayBuffer, new ArrayBuffer()); // true
+     * is(Map, new Map()); // true
+     * is(RegExp, /./g); // true
+     * is(Set, new Set()); // true
+     * is(WeakMap, new WeakMap()); // true
+     * is(WeakSet, new WeakSet()); // true
+     * is(String, ''); // true
+     * is(String, new String('')); // true
+     * is(Number, 1); // true
+     * is(Number, new Number(1)); // true
+     * is(Boolean, true); // true
+     * is(Boolean, new Boolean(true)); // true
+     *
+     * @param type
+     * @param val
+     */
+    static is = (type, val) => ![, null].includes(val) && val.constructor === type;
+
+    static isObject = (obj) => !!obj && obj.constructor === {}.constructor;
+
+    static isFunction = val => typeof val === 'function';
+
+    static objectType1 = (obj) => {
+        try {
+            let op = Object.prototype.toString.call(obj);
+            return op.replace(/\[|object|\]| /g, '');
+        } catch {
+            return undefined;
+        }
+    };
+
+    /**
+     * isNil(null); // true
+     * isNil(undefined); // true
+     *
+     * @param val
+     */
+    static isNil = val => val === undefined || val === null;
+
+    /**
+     * isPrimitive(null); // true
+     * isPrimitive(50); // true
+     * isPrimitive('Hello!'); // true
+     * isPrimitive(false); // true
+     * isPrimitive(Symbol()); // true
+     * isPrimitive([]); // false
+     *
+     * @param val
+     */
+    static isPrimitive = val => !['object', 'function'].includes(typeof val) || val === null;
+
+    static objectType = v => v === undefined ? 'undefined' : v === null ? 'null' : v.constructor.name.toLowerCase();
+
+    /**
+     * lowercaseKeys({NAME: 'Pujan}) --> {name: 'Pujan}
+     * @param obj
+     */
+    static lowercaseKeys = obj =>
+        Object.keys(obj).reduce((acc, key) => {
+            acc[key.toLowerCase()] = obj[key];
+            return acc;
+        }, {});
+
+    // static get = (from, ...selectors) => [...selectors].map(s => s.replace(/\[([^\[\]]*)\]/g, '.$1.').split('.').filter(t => t !== '').reduce((prev, cur) => prev && prev[cur], from));
+    // static atob = str => new Buffer(str, 'base64').toString('binary'); // atob('Zm9vYmFy'); // 'foobar'
+    // static btoa = str => new Buffer(str, 'binary').toString('base64');
 }
 
 class StringsUtils {
@@ -120,6 +210,36 @@ class StringsUtils {
         return text;
     };
 
+    /**
+     * toKebabCase('camelCase'); // 'camel-case'
+     * toKebabCase('some text'); // 'some-text'
+     *
+     * @param text
+     */
+    static kebabCase = (text) => text && text
+        .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+        .map(x => x.toLowerCase())
+        .join('-');
+
+    /**
+     * toSnakeCase('camelCase'); // 'camel_case'
+     * toSnakeCase('some text'); // 'some_text'
+     *
+     * @param text
+     */
+    static snakeCase = (text) => text && text
+        .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+        .map(x => x.toLowerCase())
+        .join('_');
+
+    /**
+     * truncateString('boomerang', 7); // 'boom...'
+     *
+     * @param str
+     * @param num
+     */
+    static truncateString = (str, num) => str.length > num ? str.slice(0, num > 3 ? num - 3 : num) + '...' : str;
+
     static random = {
         default: (min: number = 0, max: number = 100): number => {
             if (min >= 0 && max <= 1) return +(Math.random() * (0.00 - 1.00) + 1.00).toFixed(2);
@@ -156,7 +276,7 @@ class StringsUtils {
         }
     };
 
-    static isEmpty = (a: any) => {
+    static isEmpty1 = (a: any) => {
         if (!isString(a)) return ObjectsUtils.isEmpty(a);
 
         if (!a || a.length === 0 || a === "" || typeof a === "undefined" || !/[^\s]/.test(a) || /^\s*$/.test(a) || a.replace(/\s/g, "") === "") {
@@ -164,6 +284,8 @@ class StringsUtils {
         }
         return false;
     };
+
+    static isEmpty = val => val == null || !(Object.keys(val) || val).length;
 
     static isString = (a: any) => {
         if (a === undefined || a === null) {
@@ -183,18 +305,108 @@ class StringsUtils {
         return true;
     };
 
+    static isInteger = (number) => (number ^ 0) === number;
+
+    static isNumber = (n: any) => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) == n;
+
+    static size1 = (item: any) => {
+        if (item === null) return 0;
+
+        if (Array.isArray(item)) return item.length;
+
+        return Object.keys(item).length;
+    };
+
+    static size = val =>
+        Array.isArray(val)
+            ? val.length
+            : val && typeof val === 'object'
+            ? val.size || val.length || Object.keys(val).length
+            : typeof val === 'string'
+                ? new Blob([val]).size
+                : 0;
+
+    static queryStringToObject = (query = window.location.search.substring(1)) => {
+        if (query.startsWith('?')) query = query.substr(1);
+        let query_string = {};
+        const vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            const pair = vars[i].split("=");
+            if (typeof query_string[pair[0]] === "undefined") {
+                query_string[pair[0]] = decodeURIComponent(pair[1]);
+            } else if (typeof query_string[pair[0]] === "string") {
+                var arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
+                query_string[pair[0]] = arr;
+            } else {
+                query_string[pair[0]].push(decodeURIComponent(pair[1]));
+            }
+        }
+        return query_string;
+    };
 
     static removeHtmlTags = (a: string) => {
         return a.replace(/(<([^>]+)>)/ig, "");
     };
 
-    static isInteger = (a: any) => {
-        return !isNaN(parseFloat(a)) && isFinite(a);
+    static escapeHTML = str =>
+        str.replace(
+            /[&<>'"]/g,
+            tag =>
+                ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+        );
+
+    static unescapeHTML = str =>
+        str.replace(
+            /&amp;|&lt;|&gt;|&#39;|&quot;/g,
+            tag =>
+                ({
+                    '&amp;': '&',
+                    '&lt;': '<',
+                    '&gt;': '>',
+                    '&#39;': "'",
+                    '&quot;': '"'
+                }[tag] || tag)
+        );
+
+    static slugify = (text) => {
+        const a = 'àáäâèéëêìíïîòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;';
+        const b = 'aaaaeeeeiiiioooouuuuncsyoarsnpwgnmuxzh------';
+        const p = new RegExp(a.split('').join('|'), 'g');
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(p, c => b.charAt(a.indexOf(c)))
+            .replace(/&/g, '-and-')
+            .replace(/[^\w-]+/g, '')
+            .replace(/--+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
     };
 
     static formatCurrency = (value: number) => {
         return parseFloat('' + value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
     };
+
+    /**
+     * toCurrency(123456.789, 'EUR'); // €123,456.79  | currency: Euro | currencyLangFormat: Local
+     * toCurrency(123456.789, 'USD', 'en-us'); // $123,456.79  | currency: US Dollar | currencyLangFormat: English (United States)
+     * toCurrency(123456.789, 'USD', 'fa'); // ۱۲۳٬۴۵۶٫۷۹ ؜$ | currency: US Dollar | currencyLangFormat: Farsi
+     * toCurrency(322342436423.2435, 'JPY'); // ¥322,342,436,423 | currency: Japanese Yen | currencyLangFormat: Local
+     * toCurrency(322342436423.2435, 'JPY', 'fi'); // 322 342 436 423 ¥ | currency: Japanese Yen | currencyLangFormat: Finnish
+     *
+     * @param n
+     * @param curr
+     * @param LanguageFormat
+     */
+    static toCurrency = (n, curr, LanguageFormat = undefined) => Intl.NumberFormat(LanguageFormat, {
+        style: 'currency',
+        currency: curr
+    }).format(n);
 
     static guid = (hyphen: boolean = false) => {
         const hyphenChar = hyphen ? '-' : '';
@@ -246,6 +458,60 @@ class StringsUtils {
         return text.match(/"([^"]+)"/g) || [];
     };
 
+    static isLowerCase = str => str === str.toLowerCase();
+    static isUpperCase = str => str === str.toUpperCase();
+
+    static words = (text: string, pattern = /[^a-zA-Z-]+/) => text.split(pattern).filter(Boolean);
+
+    /**
+     * mask('1234567890',3,'*') --> *******890
+     *
+     * @param cc
+     * @param num
+     * @param mask
+     */
+    static mask = (cc, num = 4, mask = '*') => ('' + cc).slice(0, -num).replace(/./g, mask) + ('' + cc).slice(-num);
+
+    /**
+     * pad('cat', 8); // '  cat   '
+     pad(String(42), 6, '0'); // '004200'
+     pad('foobar', 3); // 'foobar'
+
+     * @param str
+     * @param length
+     * @param char
+     */
+    static pad = (str, length, char = ' ') => str.padStart((str.length + length) / 2, char).padEnd(length, char);
+
+    /**
+     * removeNonASCII('äÄçÇéÉêlorem-ipsumöÖÐþúÚ'); // 'lorem-ipsum'
+     *
+     * @param str
+     */
+    static removeNonASCII = str => str.replace(/[^\x20-\x7E]/g, '');
+
+    static hexToRGB = hex => {
+        let alpha = false,
+            h = hex.slice(hex.startsWith('#') ? 1 : 0);
+        if (h.length === 3) h = [...h].map(x => x + x).join('');
+        else if (h.length === 8) alpha = true;
+        h = parseInt(h, 16);
+        return (
+            'rgb' +
+            (alpha ? 'a' : '') +
+            '(' +
+            (h >>> (alpha ? 24 : 16)) +
+            ', ' +
+            ((h & (alpha ? 0x00ff0000 : 0x00ff00)) >>> (alpha ? 16 : 8)) +
+            ', ' +
+            ((h & (alpha ? 0x0000ff00 : 0x0000ff)) >>> (alpha ? 8 : 0)) +
+            (alpha ? `, ${h & 0x000000ff}` : '') +
+            ')'
+        );
+    };
+
+    static RGBToHex = (r, g, b) => ((r << 16) + (g << 8) + b).toString(16).padStart(6, '0');
+
     /**
      * Replace text at particular index with char;
      *
@@ -268,13 +534,106 @@ class StringsUtils {
         if (index < 0) return text;
         return text.substr(0, index) + text.substr(index + 1);
     };
+}
 
+class MathsUtils {
+    static average = (...nums) => nums.reduce((acc, val) => acc + val, 0) / nums.length;
+
+    /**
+     * averageBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], o => o.n); // 5
+     *
+     * @param arr
+     * @param fn
+     */
+    static averageBy = (arr, fn) => arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val) => acc + val, 0) / arr.length;
+
+    /**
+     * gcd(12,18) => 6
+     *
+     * @param arr
+     */
+    static gcd = (...arr) => {
+        const _gcd = (x, y) => (!y ? x : gcd(y, x % y));
+        return [...arr].reduce((a, b) => _gcd(a, b));
+    };
+
+    /**
+     * lcm(12, 5); --> 60
+     * lcm(...[1,2,3,4]) --> 12
+     *
+     * @param arr
+     */
+    static lcm = (...arr) => {
+        const gcd = (x, y) => (!y ? x : gcd(y, x % y));
+        const _lcm = (x, y) => (x * y) / gcd(x, y);
+        return [...arr].reduce((a, b) => _lcm(a, b));
+    };
+
+    static isPrime = num => {
+        const boundary = Math.floor(Math.sqrt(num));
+        for (var i = 2; i <= boundary; i++) if (num % i === 0) return false;
+        return num >= 2;
+    };
+
+    static primes = num => {
+        let arr = Array.from({length: num - 1}).map((x, i) => i + 2),
+            sqroot = Math.floor(Math.sqrt(num)),
+            numsTillSqroot = Array.from({length: sqroot - 1}).map((x, i) => i + 2);
+        numsTillSqroot.forEach(x => (arr = arr.filter(y => y % x !== 0 || y === x)));
+        return arr;
+    };
+
+    static isEven = num => num % 2 === 0;
+
+    static isOdd = num => num % 2 === 1;
+
+    /**
+     * maxBy([{a:5},{a:6}], o => o.a); --> 6
+     *
+     * @param arr
+     * @param fn
+     */
+    static maxBy = (arr, fn) => Math.max(...arr.map(typeof fn === 'function' ? fn : val => val[fn]));
+    static minBy = (arr, fn) => Math.min(...arr.map(typeof fn === 'function' ? fn : val => val[fn]));
+
+    /**
+     * sumBy([{ a: 4 }, { a: 2 }], o => o.a); // 6
+     *
+     * @param arr
+     * @param fn
+     */
+    static sumBy = (arr, fn) => arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val) => acc + val, 0);
+    /**
+     * Middle of sorted array;
+     *
+     * @param arr
+     */
+    static median = arr => {
+        const mid = Math.floor(arr.length / 2), nums = [...arr].sort((a, b) => a - b);
+        return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+    };
+
+    /**
+     * percentile([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 6); // 55
+     *
+     * @param arr
+     * @param val
+     */
+    static percentile = (arr, val) => (100 * arr.reduce((acc, v) => acc + (v < val ? 1 : 0) + (v === val ? 0.5 : 0), 0)) / arr.length;
+
+    /**
+     * toSafeInteger('3.2'); // 3
+     * toSafeInteger(Infinity); // 9007199254740991
+     *
+     * @param num
+     */
+    static toSafeInteger = num => Math.round(Math.max(Math.min(num, Number.MAX_SAFE_INTEGER), Number.MIN_SAFE_INTEGER));
 }
 
 
 class ValidationsUtils {
 
-    static validateEmail = (email: string) => {
+    static isValidEmail = (email: string) => {
         var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         if (filter.test(email)) {
             return true;
@@ -282,7 +641,7 @@ class ValidationsUtils {
         return false;
     };
 
-    static validateUrl = (value: string) => {
+    static isValidUrl = (value: string) => {
         var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
         if (regexp.test(value.toLowerCase())) {
             return true;
@@ -291,7 +650,7 @@ class ValidationsUtils {
         }
     };
 
-    static validateImage = (value: string) => {
+    static isValidImage = (value: string) => {
         const exp = /.*\.(gif)|(jpeg)|(jpg)|(png)$/;
         if (value != "") {
             if (value.toLowerCase().match(exp)) {
@@ -305,7 +664,7 @@ class ValidationsUtils {
         //return false;
     };
 
-    static validateUSA_SSN(value: string) {
+    static isValidUSA_SSN(value: string) {
         value = value.toLowerCase();
         var tmp = false;
         var re = /^([0-6]\d{2}|7[0-6]\d|77[0-2])([ \-]?)(\d{2})\2(\d{4})$/;
@@ -335,71 +694,29 @@ class ValidationsUtils {
             return true;
     }
 
-    static validateDate(dateStr: string, format: string) {
-        if (format == null) {
-            format = "MDY";
-        }
-        format = format.toUpperCase();
-        if (format.length != 3) {
-            format = "MDY";
-        }
-        if ((format.indexOf("M") == -1) || (format.indexOf("D") == -1) || (format.indexOf("Y") == -1)) {
-            format = "MDY";
-        }
-        if (format.substring(0, 1) == "Y") { // If the year is first
-            var reg1 = /^\d{2}(\-|\/|\.)\d{1,2}\1\d{1,2}$/
-            var reg2 = /^\d{4}(\-|\/|\.)\d{1,2}\1\d{1,2}$/
-        } else if (format.substring(1, 2) == "Y") { // If the year is second
-            var reg1 = /^\d{1,2}(\-|\/|\.)\d{2}\1\d{1,2}$/
-            var reg2 = /^\d{1,2}(\-|\/|\.)\d{4}\1\d{1,2}$/
-        } else {
-            var reg1 = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{2}$/
-            var reg2 = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
-        }
-        if ((reg1.test(dateStr) == false) && (reg2.test(dateStr) == false)) {
-            return false;
-        }
-        var parts = dateStr.split(RegExp.$1); // Split into 3 parts based on what the divider was
+    static isValidDate = (value, userFormat = 'mm/dd/yyyy') => {
+        const delimiter = /[^mdy]/.exec(userFormat)[0];
+        const theFormat = userFormat.split(delimiter);
+        const theDate = value.split(delimiter);
 
-        if (format.substring(0, 1) == "M") {
-            var mm = parts[0];
+        function isDate(date, format) {
+            let m, d, y, i = 0, len = format.length, f;
+            for (i; i < len; i++) {
+                f = format[i];
+                if (/m/.test(f)) m = date[i];
+                if (/d/.test(f)) d = date[i];
+                if (/y/.test(f)) y = date[i];
+            }
+            return (
+                m > 0 && m < 13 &&
+                y && y.length === 4 &&
+                d > 0 &&
+                d <= (new Date(y, m, 0)).getDate()
+            );
         }
-        else if (format.substring(1, 2) == "M") {
-            var mm = parts[1];
-        } else {
-            var mm = parts[2];
-        }
-        if (format.substring(0, 1) == "D") {
-            var dd = parts[0];
-        }
-        else if (format.substring(1, 2) == "D") {
-            var dd = parts[1];
-        } else {
-            var dd = parts[2];
-        }
-        if (format.substring(0, 1) == "Y") {
-            var yy = parts[0];
-        }
-        else if (format.substring(1, 2) == "Y") {
-            var yy = parts[1];
-        } else {
-            var yy = parts[2];
-        }
-        if (parseFloat(yy) <= 50) {
-            yy = (parseFloat(yy) + 2000).toString();
-        }
-        if (parseFloat(yy) <= 99) {
-            yy = (parseFloat(yy) + 1900).toString();
-        }
-        var dt = new Date(parseFloat(yy), parseFloat(mm) - 1, parseFloat(dd), 0, 0, 0, 0);
-        if (parseFloat(dd) != dt.getDate()) {
-            return false;
-        }
-        if (parseFloat(mm) - 1 != dt.getMonth()) {
-            return false;
-        }
-        return true;
-    }
+
+        return isDate(theDate, theFormat);
+    };
 
     static validateCreditCard = (cardnumber: string, cardtype: string = 'all') => {
         if (/[^0-9-\s]+/.test(cardnumber)) return false;
@@ -475,7 +792,7 @@ class ValidationsUtils {
         if ((checksum % 10) == 0) return true; else return false;
     };
 
-    static validateCitizenId = (id: string, country: string) => {
+    static isValidCitizenId = (id: string, country: string) => {
 
         function mod11And10(a: string) {
             for (var b = 5, c = a.length, d = 0; c > d; d++) b = (2 * (b || 10) % 11 + parseInt(a.charAt(d), 10)) % 10;
@@ -546,8 +863,19 @@ class ValidationsUtils {
                 throw new Error(`Country ${country} is not supported`);
         }
     };
+
 }
 
+export class PromiseUtil {
+
+    /**
+     * const delay = promisify((d, cb) => setTimeout(cb, d));
+     * delay(2000).then(() => console.log('Hi!')); // // Promise resolves after 2s
+     *
+     * @param func
+     */
+    static promisify = func => (...args) => new Promise((resolve, reject) => func(...args, (err, result) => (err ? reject(err) : resolve(result))));
+}
 
 export class Queue {
     dataholder = [];
@@ -638,9 +966,12 @@ export const reverse = ArraysUtils.reverse;
 export const union = ArraysUtils.union;
 export const intersection = ArraysUtils.intersection;
 export const diff = ArraysUtils.diff;
-export const flatten = ArraysUtils.flatten;
+export const flattenDeep = ArraysUtils.flattenDeep;
+export const flattenByDepth = ArraysUtils.flattenByDepth;
 export const last = ArraysUtils.last;
 export const findIndices = ArraysUtils.findIndices;
+export const chunk = ArraysUtils.chunk;
+export const nthElement = ArraysUtils.nthElement;
 
 export const camelCase = StringsUtils.camelCase;
 export const pascalCase = StringsUtils.pascalCase;
@@ -648,14 +979,30 @@ export const titleCase = StringsUtils.titleCase;
 export const toggleCase = StringsUtils.toggleCase;
 export const swapCase = StringsUtils.swapCase;
 export const dotCase = StringsUtils.dotCase;
+export const kebabCase = StringsUtils.kebabCase;
+export const snakeCase = StringsUtils.snakeCase;
+
+export const truncateString = StringsUtils.truncateString;
 export const random = StringsUtils.random;
 export const guid = StringsUtils.guid;
 export const formatCurrency = StringsUtils.formatCurrency;
+export const toCurrency = StringsUtils.toCurrency;
 export const isEmpty = StringsUtils.isEmpty;
 export const isInteger = StringsUtils.isInteger;
+export const isNumber = StringsUtils.isNumber;
 export const isJsonString = StringsUtils.isJsonString;
 export const isString = StringsUtils.isString;
 export const removeHtmlTags = StringsUtils.removeHtmlTags;
+export const escapeHTML = StringsUtils.escapeHTML;
+export const unescapeHTML = StringsUtils.unescapeHTML;
+export const isLowerCase = StringsUtils.isLowerCase;
+export const isUpperCase = StringsUtils.isUpperCase;
+export const words = StringsUtils.words;
+export const mask = StringsUtils.mask;
+export const pad = StringsUtils.pad;
+export const removeNonASCII = StringsUtils.removeNonASCII;
+export const hexToRGB = StringsUtils.hexToRGB;
+export const RGBToHex = StringsUtils.RGBToHex;
 export const extractURLs = StringsUtils.extractURLs;
 export const extractPhones = StringsUtils.extractPhones;
 export const extractEmails = StringsUtils.extractEmails;
@@ -668,15 +1015,40 @@ export const extractDotted = StringsUtils.extractDotted;
 export const extractQuoted = StringsUtils.extractQuoted;
 export const replaceAt = StringsUtils.replaceAt;
 export const removeAt = StringsUtils.removeAt;
+export const size = StringsUtils.size;
+export const queryStringToObject = StringsUtils.queryStringToObject;
+export const slugify = StringsUtils.slugify;
+
+export const average = MathsUtils.average;
+export const averageBy = MathsUtils.averageBy;
+export const gcd = MathsUtils.gcd;
+export const lcm = MathsUtils.lcm;
+export const isPrime = MathsUtils.isPrime;
+export const primes = MathsUtils.primes;
+export const isEven = MathsUtils.isEven;
+export const isOdd = MathsUtils.isOdd;
+export const maxBy = MathsUtils.maxBy;
+export const minBy = MathsUtils.minBy;
+export const sumBy = MathsUtils.sumBy;
+export const median = MathsUtils.median;
+export const percentile = MathsUtils.percentile;
+export const toSafeInteger = MathsUtils.toSafeInteger;
 
 export const removeObject = ObjectsUtils.remove;
 export const safeparse = ObjectsUtils.safeparse;
+export const isObject = ObjectsUtils.isObject;
+export const isFunction = ObjectsUtils.isFunction;
+export const isNil = ObjectsUtils.isNil;
+export const isPrimitive = ObjectsUtils.isPrimitive;
+export const type = ObjectsUtils.objectType;
+export const lowercaseKeys = ObjectsUtils.lowercaseKeys;
 
-export const validateEmail = ValidationsUtils.validateEmail;
-export const validateUrl = ValidationsUtils.validateUrl;
-export const validateImage = ValidationsUtils.validateImage;
-export const validateUSA_SSN = ValidationsUtils.validateUSA_SSN;
-export const validateDate = ValidationsUtils.validateDate;
-export const validateCreditCard = ValidationsUtils.validateCreditCard;
+export const isValidEmail = ValidationsUtils.isValidEmail;
+export const isValidUrl = ValidationsUtils.isValidUrl;
+export const isValidImage = ValidationsUtils.isValidImage;
+export const isValidUSA_SSN = ValidationsUtils.isValidUSA_SSN;
+export const isValidDate = ValidationsUtils.isValidDate;
 export const isValidCreditCard = ValidationsUtils.isValidCreditCard;
-export const validateCitizenId = ValidationsUtils.validateCitizenId;
+export const isValidCitizenId = ValidationsUtils.isValidCitizenId;
+
+export const promisify = PromiseUtil.promisify;
